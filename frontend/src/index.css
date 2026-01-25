@@ -1,1 +1,46 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 @import "tailwindcss";
+
+
+
+
+
+body{
+  font-family: "Merriweather", serif;
+}
+.name-font{
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+.background-gradient{
+    background: linear-gradient(
+  90deg,
+  #05050a 0%,
+  #05050a 7.692%,
+  #090a0e calc(7.692% + 1px),
+  #090a0e 15.385%,
+  #0d0e12 calc(15.385% + 1px),
+  #0d0e12 23.077%,
+  #121316 calc(23.077% + 1px),
+  #121316 30.769%,
+  #16171a calc(30.769% + 1px),
+  #16171a 38.462%,
+  #1a1b1e calc(38.462% + 1px),
+  #1a1b1e 46.154%,
+  #1e1f22 calc(46.154% + 1px),
+  #1e1f22 53.846%,
+  #222326 calc(53.846% + 1px),
+  #222326 61.538%,
+  #26272a calc(61.538% + 1px),
+  #26272a 69.231%,
+  #292a2d calc(69.231% + 1px),
+  #292a2d 76.923%,
+  #2c2d30 calc(76.923% + 1px),
+  #2c2d30 84.615%,
+  #2e2f33 calc(84.615% + 1px),
+  #2e2f33 92.308%,
+  #303135 calc(92.308% + 1px) 100%
+);
+}
