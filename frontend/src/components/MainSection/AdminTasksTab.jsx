@@ -3,15 +3,13 @@ import AdminTaskDetailsView from "./AdminTaskDetailsView";
 import CreateTaskPopup from "./CreateTaskPopup";
 
 const AdminTasksTab = ({
-  taskTitle,
-  setTaskTitle,
-  taskDesc,
-  setTaskDesc,
 
   employeesData,
+  setemployeesData,
+  setRefreshData,
   selectedEmployees,
   setSelectedEmployees,
-
+  setAdminTasksInfo,
   open,
   setOpen,
 
@@ -47,7 +45,10 @@ const AdminTasksTab = ({
       {/* POPUP WINDOW */}
       {(createNewTaskBtn || editMode) && 
         <CreateTaskPopup
+          setemployeesData={setemployeesData}
+          setRefreshData={setRefreshData}
           adminTasksInfo={adminTasksInfo}
+          setAdminTasksInfo={setAdminTasksInfo}
           editMode={editMode}
           setEditMode={setEditMode}
           setOpenMenu={setOpenMenu}
@@ -61,11 +62,13 @@ const AdminTasksTab = ({
 
       {/* TABLE */}
       <AdminTaskDetailsView
+        setRefreshData={setRefreshData}
         editMode={editMode}
         setEditMode={setEditMode}
         openMenu={openMenu}
         setOpenMenu={setOpenMenu}
         adminTasksInfo={adminTasksInfo}
+        setAdminTasksInfo={setAdminTasksInfo}
         openMenuTaskId={openMenuTaskId}
         setOpenMenuTaskId={setOpenMenuTaskId}
         setCreateNewTaskBtn={setCreateNewTaskBtn}

@@ -7,7 +7,9 @@ import HomePage from "./MainSection/HomePage.jsx";
 import ProfilePage from "./MainSection/ProfilePage.jsx";
 import AdminEmployeesTab from "./MainSection/AdminEmployeesTab.jsx";
 import AdminTasksTab from "./MainSection/AdminTasksTab.jsx";
+import EmployeeAssignedTasksTab from './Employee/EmployeeAssignedTasksTab.jsx'
 import {loadAdminTasksStatsForTasksTabAPI, loadAdminTasksStatsTableForHomePageAPI, loadEmployeesDataAPI } from "../api/database.js";
+import EmployeePendingTasksTab from "./Employee/EmployeePendingTasksTab.jsx";
 
 const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   const session = JSON.parse(sessionStorage.getItem("loggedUser"));
@@ -29,7 +31,18 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   const [changesMode, setChangesMode] = useState(false);
   const [openMenuTaskId, setOpenMenuTaskId] = useState(null);
   const [editMode,setEditMode] = useState(false);
+  const [refreshData,setRefreshData] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async() => {
+      await loadAdminStatsTasksTab();
+      await loadAdminStatsHomePage();
+      await loademployeesDataWithTasksStats();
+    }
+    if(refreshData){
+      fetchData();
+    }
+  },[refreshData])
 
 
   let employeeCompletion = 10;
@@ -63,10 +76,10 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
 
   if (userRole === "employee") {
     sideBarOptions = [
-      { id: "employeeProfile", label: "Profile" },
-      { id: "employeeLabel", label: "Assigned Tasks" },
-      { id: "employeePending", label: "Pending Tasks" },
-      { id: "employeeLogout", label: "Logout" },
+      { id: "employeeProfileTab", label: "Profile" },
+      { id: "employeeAssignedTasksTab", label: "Assigned Tasks" },
+      { id: "employeePendingTasksTab", label: "Pending Tasks" },
+      { id: "employeeLogoutTab", label: "Logout" },
     ];
     statusBoxes = [
       ["Completed", employeeCompletion],
@@ -135,6 +148,7 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
       const data = await loadAdminTasksStatsTableForHomePageAPI();
       if (data.success) {
         setAdminTasksStats(data.tasksInfo);
+        console.log(data.tasksInfo)
         toast.success("fetched admin tasks stats data");
       } else {
         setAdminTasksStats([]);
@@ -146,19 +160,19 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   };
 
   useEffect(() => {
-    if (user?._id) {
+    if (userRole==="admin") {
       loademployeesDataWithTasksStats();
       loadAdminStatsTasksTab();
       loadAdminStatsHomePage();
     } else {
-      toast.error("please login first..!");
+      toast.success("loading employeee data")
     }
   }, [user?._id]);
 
   return (
     <div
-      className={`overflow-x-hidden pt-[64px] m-2 pl-15 pr-4 h-screen ${
-        openSideBar ? "sm:pl-[250px] pl-[200px]" : "sm:pl-[60px] pl-[55px]"
+      className={`overflow-x-hidden pt-[64px] m-2 pl-15 pr-4 h-screen 
+        // openSideBar ? "sm:pl-[250px] pl-[200px]" : "sm:pl-[60px] pl-[55px]"
       }`}
     >
       <Sidebar
@@ -175,22 +189,23 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
           adminTasksStats={adminTasksStats}
         />
       }
-      { (activeSidebarTab === "employeeProfile" || activeSidebarTab === "adminProfile") &&
+      { (activeSidebarTab === "employeeProfileTab" || activeSidebarTab === "adminProfile") &&
         <ProfilePage
+
           employeesData = {employeesData}
         />
       }
       {activeSidebarTab=="adminemployees" && 
         <AdminEmployeesTab
           employeesData={employeesData}
+          setemployeesData={setemployeesData}
+          setRefreshData={setRefreshData}
         />
       }
       {activeSidebarTab === "adminTasks" && 
         <AdminTasksTab
-          taskTitle={taskTitle}
-          setTaskTitle={setTaskTitle}
-          taskDesc={taskDesc}
-          setTaskDesc={setTaskDesc}
+          setRefreshData={setRefreshData}
+          setemployeesData={setemployeesData}
           employeesData={employeesData}
           selectedEmployees={selectedEmployees}
           setSelectedEmployees={setSelectedEmployees}
@@ -199,11 +214,19 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
           errors={errors}
           setErrors={setErrors}
           adminTasksInfo={adminTasksInfo}
+          setAdminTasksInfo={setAdminTasksInfo}
           openMenuTaskId={openMenuTaskId}
           setOpenMenuTaskId={setOpenMenuTaskId}
           handleUpdateTask={handleUpdateTask}
         />
       }
+      {activeSidebarTab === "employeeAssignedTasksTab" && 
+      <EmployeeAssignedTasksTab/>
+      }
+      {activeSidebarTab==="employeePendingTasksTab" && 
+      <EmployeePendingTasksTab/>
+      }
+
     </div>
   );
 };

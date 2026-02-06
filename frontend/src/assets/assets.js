@@ -2,11 +2,14 @@ import Logo from './logo.png';
 import background from "./bg-image.jpg";
 import Logo2 from './logo-2.png';
 import profile from './profile_photo.png';
+import deleteIcon from './deleteIcon.png';
 const assets = {
     Logo,
     background,
     Logo2,
     profile,
+    deleteIcon
+    
     
 };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {toast} from "react-toastify";
+import ParticlesBackground from './ParticlesBackground';
 
 const Login = () => {
   const [email,setEmail] = useState("");
@@ -9,7 +10,8 @@ const Login = () => {
   const [who,setWho] = useState("guest");
   const navigate = useNavigate();
   const handleLoginSubmit=async(e)=>{
-    console.log(email,password);
+    try {
+       console.log(email,password);
     e.preventDefault();
     //sending data to server
     const res = await fetch("http://localhost:4000/api/v1/taskManager/user-login",{
@@ -37,14 +39,21 @@ const Login = () => {
       })
     )
     navigate('/');
+      
+    } catch (error) {
+      console.log("error at ",error)
+      
+    }
+   
   }
   const handleNewRegister=(e)=>{
     //admin signup
     navigate('/signup');
   }
  return (
-    <div className="w-full min-h-screen background-gradient bg-cover">
-      <div className='p-10 flex items-center justify-center'>
+    <div className="w-full min-h-screen bg-black bg-cover">
+      <ParticlesBackground/>
+      <div className='p-10 flex w-full items-center justify-center'>
         <div className='w-[300px] h-[370px] bg-white rounded-md flex flex-col items-center space-y-6 sm:w-[350px]'>
           <div className='flex items-center flex-col space-y-2 py-2  '>
             <p className='text-2xl text-[#450920] font-extrabold sm:text-4xl'>Login</p>

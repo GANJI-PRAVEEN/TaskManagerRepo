@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateTaskPopup from "./CreateTaskPopup";
+import { deleteTaskAPI, loadAdminTasksStatsForTasksTabAPI, loadAdminTasksStatsTableForHomePageAPI } from "../../api/database";
+import { toast } from "react-toastify";
 
 const AdminTaskDetailsView = ({
+  setRefreshData,
+  setAdminTasksInfo,
+  adminTasksInfo,
   editMode,
   setEditMode,
   openMenu,
   setOpenMenu,
   setCreateNewTaskBtn,
-  adminTasksInfo,
   openMenuTaskId,
   setOpenMenuTaskId,
 }) => {
@@ -18,12 +22,46 @@ const AdminTaskDetailsView = ({
     console.log("taskDetail ",taskDetail);
     setCurrentTaskDetail(taskDetail);
   }
-  const handleDeleteTaskBtn = (taskID) => {
 
+
+  const loadAdminTasksInfoTasksTab = async () => {
+    try {
+          const data = await loadAdminTasksStatsForTasksTabAPI();
+          if (data.success) {
+            setAdminTasksInfo(data.adminTasksInfo);
+            toast.success("retrived admin Tasks details");
+          }
+        } catch (error) {
+          console.log("error at admintasks info -", error.message);
+        }
   }
+
+
+  const handleDeleteTaskBtn = async(taskID) => {
+    try {
+      const res = await deleteTaskAPI({taskID});
+      if(res.success){
+        toast.success(res.message);
+        setOpenMenu(false);
+        loadAdminTasksInfoTasksTab();
+      }
+      else {
+      toast.error(res.message);
+      console.log("failed to delete",res)
+      }
+      
+    } catch (error) {
+      console.log("Failed to update",error.message);
+    }
+  }
+
+
   return (
     
     <div className="w-full">
+      {adminTasksInfo?.length===0 && (
+          <p className='text-lg sm:text-xl font-bold text-center text-red-700'>Create Task and Upgrade Your Employees</p>
+      )}
       <div className="border bg-white rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse">
@@ -60,9 +98,9 @@ const AdminTaskDetailsView = ({
                       }`}
                     >
                       {taskDetail.completedEmployees?.length > 0 ? (
-                        taskDetail.completedEmployees.map((empName, idx) => (
+                        taskDetail.completedEmployees.map((emp, idx) => (
                           <div key={idx} className="text-green-600">
-                            {empName}
+                            {emp.employeeName}
                           </div>
                         ))
                       ) : (
@@ -78,9 +116,9 @@ const AdminTaskDetailsView = ({
                       }`}
                     >
                       {taskDetail.pendingEmployees?.length > 0 ? (
-                        taskDetail.pendingEmployees.map((empName, idx) => (
+                        taskDetail.pendingEmployees.map((emp, idx) => (
                           <div key={idx} className="text-red-600">
-                            {empName}
+                            {emp.employeeName}
                           </div>
                         ))
                       ) : (

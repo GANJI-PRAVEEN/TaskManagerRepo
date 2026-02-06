@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {useNavigate} from "react-router-dom"
 import { toast } from 'react-toastify';
+import ParticlesBackground from './ParticlesBackground';
 
 const SignUp = () => {
   const [gender,setGender] = useState("");
@@ -54,7 +55,8 @@ const SignUp = () => {
 
 
   return (
-    <div className="w-full min-h-screen background-gradient bg-cover">
+    <div className="w-full min-h-screen bg-black bg-cover">
+      <ParticlesBackground/>
       <div className='p-10 flex items-center justify-center'>
         <div className='w-[300px] h-[500px] bg-white rounded-md flex flex-col items-center space-y-2 sm:w-[350px]'>
           <div className="mt-1 flex justify-center">

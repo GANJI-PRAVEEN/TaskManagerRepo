@@ -1,9 +1,18 @@
-import React from "react";
+import React,{useEffect} from "react";
 
 const AdminTasksStatsTable = ({adminTasksStats}) => {
+
+  useEffect(() => {
+    console.log("adminTasksStats ",adminTasksStats)
+  },[])
+
   return (
     <div className="w-full mt-8">
+    {adminTasksStats?.length===0 && (
+      <p className='text-xl sm:text-xl font-bold text-center p-2 text-red-600'>Please do Skill-Up employees and create Task </p>
+    )}
       <div className="border bg-white rounded-lg shadow-md overflow-hidden">
+        
         {/* to enable scrolling horizontal */}
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse">
@@ -24,6 +33,7 @@ const AdminTasksStatsTable = ({adminTasksStats}) => {
               </tr>
             </thead>
             <tbody>
+
               {adminTasksStats.flatMap((task) =>
                 task.employees?.map((emp) => (
                   <tr

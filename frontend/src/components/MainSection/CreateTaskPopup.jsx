@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { CreateNewTaskAPI } from "../../api/database";
+import { CreateNewTaskAPI,deleteTaskAPI,loadAdminTasksStatsForTasksTabAPI,loadAdminTasksStatsTableForHomePageAPI,loadEmployeesDataAPI,updateTaskAPI } from "../../api/database";
+import { toast } from "react-toastify";
 
 const CreateTaskPopup = ({
-  adminTasksInfo,
+  setRefreshData,
   editMode,
+  setemployeesData,
   setEditMode,
   setOpenMenu,
   openMenuTaskId,
@@ -11,6 +13,8 @@ const CreateTaskPopup = ({
   employeesData,
   setCreateNewTaskBtn,
   createNewTaskBtn,
+  adminTasksInfo,
+  setAdminTasksInfo
 }) => {
   const session = JSON.parse(sessionStorage.getItem("loggedUser"));
   const userRole = session?.role;
@@ -20,22 +24,71 @@ const CreateTaskPopup = ({
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [errors, setErrors] = useState({});
   const [openDropDown, setOpenDropDown] = useState(false);
-  const taskDetail = adminTasksInfo.find( task => openMenuTaskId===task._id);
-  console.log(taskDetail)
+  const [employeeWithStatus, setEmployeeWithStatus] = useState([]);
+  const [tasksData,setTasksData] = useState(null);
+  
+  const loadAdminTasksInfoTasksTab = async () => {
+    try {
+          const data = await loadAdminTasksStatsForTasksTabAPI();
+          if (data.success) {
+            setAdminTasksInfo(data.adminTasksInfo);
+            toast.success("retrived admin Tasks details");
+          }
+        } catch (error) {
+          console.log("error at admintasks info -", error.message);
+        }
+  }
+  const taskDetail = adminTasksInfo.find((task) => openMenuTaskId === task._id);
+
+
   useEffect(() => {
-    setOpenMenu(false);
-  },[])
-  useEffect(() => {
-    if(editMode && taskDetail){
+    if (editMode && taskDetail) {
       setTaskTitle(taskDetail.taskTitle);
       setTaskDesc(taskDetail.taskDesc);
+      setEmployeeWithStatus([
+        ...taskDetail.completedEmployees.map((emp) => ({
+          emp:emp,
+          status: "completed",
+        })),
+        ...taskDetail.pendingEmployees.map((emp) => ({
+          emp:emp,
+          status: "pending",
+        })),
+      ]);
       const allEmployees = [
-        ...(taskDetail.completedEmployees || []),
-        ...(taskDetail.pendingEmployees || [])
+        ...taskDetail.completedEmployees.map((emp) => emp._id),
+        ...taskDetail.pendingEmployees.map((emp) => emp._id),
       ];
       setSelectedEmployees(allEmployees);
+      console.log("taskDtail ", taskDetail);
+      console.log("adminTasksInfo - ", adminTasksInfo);
+
+      setOpenMenu(false);
     }
-  },[editMode,taskDetail])
+  }, [editMode, taskDetail]);
+
+  const handleUpdateTask = async () => {
+    try {
+     // update(openMenuTaskId,taskTitle,taskDesc,employeeWithStatus);
+     const res = await updateTaskAPI(
+      {openMenuTaskId,taskTitle,taskDesc,employeeWithStatus});
+     if(res.success){
+      toast.success(res.message);
+      loadAdminTasksInfoTasksTab();
+      const resp = await loadEmployeesDataAPI();
+      if(resp.success)setemployeesData(resp.employees);
+      setEditMode(false);
+     }
+     else {
+      toast.error(res.message);
+      console.log("failed to update",res)
+     }
+    } catch (error) {
+      console.log("Failed to update",error.message);
+    }
+  };
+
+
   const handleCreateNewTask = async () => {
     try {
       let newErrors = {};
@@ -56,6 +109,9 @@ const CreateTaskPopup = ({
         selectedEmployees: selectedEmployees,
       });
       if (data.success) {
+        loadAdminTasksInfoTasksTab();
+        const resp = await loadEmployeesDataAPI();
+        if(resp.success)setemployeesData(resp.employees);
         setCreateNewTaskBtn(false);
         toast.success("Created Task Successfully");
       } else {
@@ -68,7 +124,7 @@ const CreateTaskPopup = ({
 
   return (
     <div
-      className={`${(createNewTaskBtn || editMode )? "flex" : "hidden"} fixed inset-0 items-center justify-center`}
+      className={`${createNewTaskBtn || editMode ? "flex" : "hidden"} fixed inset-0 items-center justify-center`}
     >
       <div className="absolute inset-0 bg-black/50"></div>
 
@@ -86,12 +142,12 @@ const CreateTaskPopup = ({
               Update Task
             </p>
           )}
-          
+
           <span
             className="absolute right-1 hover:cursor-pointer top-1 material-symbols-outlined"
             onClick={() => {
-               setCreateNewTaskBtn(false);
-               setEditMode(false);
+              setCreateNewTaskBtn(false);
+              setEditMode(false);
             }}
           >
             close
@@ -144,10 +200,10 @@ const CreateTaskPopup = ({
               className="w-full p-1 border bg-gray-400/30 py-2 flex justify-between items-center hover:cursor-pointer"
             >
               <span className={``}>
-                {selectedEmployees.length > 0
+                {(selectedEmployees.length > 0) & (employeesData.length > 0) //selectedEmployees storing empId's
                   ? employeesData
-                      .filter((emp) => selectedEmployees.includes(emp._id))
-                      .map((emp) => emp.employeeName)
+                      .filter((emp) => selectedEmployees.includes(emp._id)) //only retrieve the emp who's id is in selectedEmployees
+                      .map((emp) => emp.employeeName) //then fetch their name using empID
                       .join(", ")
                   : "Select Employees"}
               </span>
@@ -164,12 +220,25 @@ const CreateTaskPopup = ({
                   <label key={emp._id}>
                     <input
                       type="checkbox"
-                      checked={selectedEmployees.includes(emp._id)}
+                      checked={selectedEmployees.includes(emp._id)} //tick all already selected employees
                       onChange={() => {
-                        setSelectedEmployees((prev) =>
-                          prev.includes(emp._id)
-                            ? prev.filter((id) => id !== emp._id)
-                            : [...prev, emp._id],
+                        setEmployeeWithStatus((prev) =>
+                          prev.some((item) => item?.emp?._id === emp?._id)
+                            ? prev.filter((item) => item?.emp?._id !== emp?._id)
+                            : [
+                                ...prev,
+                                {
+                                  emp,
+                                  status: "pending",
+                                },
+                              ],
+                        );
+
+                        setSelectedEmployees(
+                          (prev) =>
+                            prev.includes(emp._id) //if already empId exist in the selectedEmployee?
+                              ? prev.filter((id) => id !== emp._id) //if exits remove it from selectedEmployees
+                              : [...prev, emp._id], //else add the new empId into the selectedEmployees
                         );
                         setErrors((prev) => ({ ...prev, setEmployees: "" }));
                       }}
@@ -183,9 +252,9 @@ const CreateTaskPopup = ({
             <div className="text-center mt-4">
               <button
                 className={`border bg-green-700 px-6 py-1 rounded-md text-white hover:cursor-pointer hover:bg-green-600`}
-                onClick={handleCreateNewTask}
+                onClick={editMode ? handleUpdateTask : handleCreateNewTask}
               >
-                Submit
+                {editMode ? "Update" : "Submit"}
               </button>
             </div>
           </div>
