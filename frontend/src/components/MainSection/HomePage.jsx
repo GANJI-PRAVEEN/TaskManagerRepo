@@ -1,9 +1,9 @@
 import React from "react";
 import AdminTasksStatsTable from "./AdminTasksStatsTable";
 
-const HomePage = ({ activeSidebarTab, statusBoxes, adminTasksStats }) => {
+const HomePage = ({statusBoxes, adminTasksStats }) => {
   return (
-    <div className={`${activeSidebarTab === "" ? "block" : "hidden"}`}>
+    <div>
       <div className="p-4 flex items-center justify-center">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {statusBoxes.map(([title, value], index) => (

@@ -1,12 +1,8 @@
-import React from "react";
+import React,{useState} from "react";
 import AdminTaskDetailsView from "./AdminTaskDetailsView";
 import CreateTaskPopup from "./CreateTaskPopup";
 
 const AdminTasksTab = ({
-  activeSidebarTab,
-  setCreateNewTaskBtn,
-  createNewTaskBtn,
-
   taskTitle,
   setTaskTitle,
   taskDesc,
@@ -26,12 +22,16 @@ const AdminTasksTab = ({
   handleUpdateTask,
 
   adminTasksInfo,
-  openMenuTaskId,
-  setOpenMenuTaskId,
 }) => {
+
+  const [createNewTaskBtn,setCreateNewTaskBtn] = useState(false);
+  const [openMenuTaskId, setOpenMenuTaskId] = useState(null);
+  const [editMode,setEditMode] = useState(false);
+  const [openMenu,setOpenMenu] = useState(false);
   return (
+
     <div
-      className={`${activeSidebarTab === "adminTasks" ? "block" : "hidden"} relative`}
+      className={`relative`}
     >
       <div className="flex justify-between items-center px-10 py-5">
         <p className="sm:text-2xl text-lg font-bold underline">Task Details</p>
@@ -45,42 +45,30 @@ const AdminTasksTab = ({
       </div>
 
       {/* POPUP WINDOW */}
-      <CreateTaskPopup
-        createNewTaskBtn={createNewTaskBtn}
-        setCreateNewTaskBtn={setCreateNewTaskBtn}
-        taskTitle={taskTitle}
-        setTaskTitle={setTaskTitle}
-        taskDesc={taskDesc}
-        setTaskDesc={setTaskDesc}
-        employeesData={employeesData}
-        selectedEmployees={selectedEmployees}
-        setSelectedEmployees={setSelectedEmployees}
-        open={open}
-        setOpen={setOpen}
-        errors={errors}
-        setErrors={setErrors}
-        handleNewTaskCreationBtn={handleNewTaskCreationBtn}
-        handleUpdateTask={handleUpdateTask}
-      />
+      {(createNewTaskBtn || editMode) && 
+        <CreateTaskPopup
+          adminTasksInfo={adminTasksInfo}
+          editMode={editMode}
+          setEditMode={setEditMode}
+          setOpenMenu={setOpenMenu}
+          openMenuTaskId={openMenuTaskId}
+          employeesData={employeesData}
+          setOpenMenuTaskId={setOpenMenuTaskId}
+          setCreateNewTaskBtn = {setCreateNewTaskBtn}
+          createNewTaskBtn = {createNewTaskBtn}
+        />
+      }
 
       {/* TABLE */}
       <AdminTaskDetailsView
+        editMode={editMode}
+        setEditMode={setEditMode}
+        openMenu={openMenu}
+        setOpenMenu={setOpenMenu}
         adminTasksInfo={adminTasksInfo}
         openMenuTaskId={openMenuTaskId}
         setOpenMenuTaskId={setOpenMenuTaskId}
-        createNewTaskBtn={createNewTaskBtn}
         setCreateNewTaskBtn={setCreateNewTaskBtn}
-        taskTitle={taskTitle}
-        setTaskTitle={setTaskTitle}
-        taskDesc={taskDesc}
-        setTaskDesc={setTaskDesc}
-        selectedEmployees={selectedEmployees}
-        setSelectedEmployees={setSelectedEmployees}
-        open={open}
-        setOpen={setOpen}
-        errors={errors}
-        setErrors={setErrors}
-        handleNewTaskCreationBtn={handleNewTaskCreationBtn}
       />
     </div>
   );

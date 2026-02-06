@@ -3,8 +3,8 @@ import {createemployee,createAdmin,createTaskByAdmin,
     findemployeeUnderAdmin,getemployeeTasks,
     loginAdminemployee,
     getemployeeTasksStats,
-    getAdminTasksStats,
-    getAdminTasksInfo,
+    getAdminTasksStatsHomePage,
+    getAdminTasksStatsTaskTab,
  } 
  from "../controllers/admin.controller.js"
 
@@ -16,7 +16,7 @@ router.route("/findemployeeUnderAdmin").post(findemployeeUnderAdmin); //http://l
 router.route("/getemployeeTasks").post(getemployeeTasks); //http://localhost:4000/api/v1/taskManager/getemployeeTasks
 router.route("/user-login").post(loginAdminemployee);  //http://localhost:4000/api/v1/taskManager/user-login
 router.route('/getemployeeTasksStats').post(getemployeeTasksStats) //http://localhost:4000/api/v1/taskManager/getemployeeTasksStats
-router.route('/getAdminTasksStats').post(getAdminTasksStats) //http://localhost:4000/api/v1/taskManager/getAdminTasksStats
-router.route("/getAdminTasksInfo").post(getAdminTasksInfo) //http://localhost:4000/api/v1/taskManager/getAdminTasksInfo
+router.route('/getAdminTasksStatsHomePage').post(getAdminTasksStatsHomePage) //http://localhost:4000/api/v1/taskManager/getAdminTasksStatsHomePage
+router.route("/getAdminTasksStatsTaskTab").post(getAdminTasksStatsTaskTab) //http://localhost:4000/api/v1/taskManager/getAdminTasksStatsTaskTab
 
 export default router;

@@ -2,25 +2,15 @@ import React, { useState } from "react";
 import CreateTaskPopup from "./CreateTaskPopup";
 
 const AdminTaskDetailsView = ({
-  taskTitle,
-  setTaskTitle,
-  taskDesc,
-  setTaskDesc,
-  employeesData,
-  selectedEmployees,
-  setSelectedEmployees,
+  editMode,
+  setEditMode,
+  openMenu,
+  setOpenMenu,
   setCreateNewTaskBtn,
-  open,
-  setOpen,
-  errors,
-  setErrors,
-  handleNewTaskCreationBtn,
   adminTasksInfo,
   openMenuTaskId,
   setOpenMenuTaskId,
-  handleUpdateTask,
 }) => {
-  const [editMode,setEditMode] = useState(false);
   const [currentTaskDetail,setCurrentTaskDetail]= useState({});
   const handleEditTaskBtn = (taskDetail) => {
     setCreateNewTaskBtn(true);
@@ -100,13 +90,14 @@ const AdminTaskDetailsView = ({
 
                     <td className="text-center hover:cursor-pointer relative">
                       <span
-                        onClick={() =>
+                        onClick={() =>{
+                          setOpenMenu(true);
                           setOpenMenuTaskId(
                             openMenuTaskId === taskDetail._id
                               ? null
                               : taskDetail._id
                           )
-                        }
+                        }}
                         className="material-symbols-outlined"
                       >
                         tv_options_edit_channels
@@ -119,8 +110,8 @@ const AdminTaskDetailsView = ({
                             : "hidden"
                         }`}
                       >
-                        <div className="w-[120px] bg-white shadow-lg border rounded-md p-2">
-                          <button className="block w-full text-left px-2 py-1 hover:bg-gray-100" >
+                        <div className={`${openMenu ? 'block':'hidden'} w-[120px] bg-white shadow-lg border rounded-md p-2`}>
+                          <button className="block w-full text-left px-2 py-1 hover:bg-gray-100" onClick={() => setEditMode(true)} >
                             Edit
                           </button>
                           <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-red-600" onClick={()=>{handleDeleteTaskBtn(taskDetail._id)}}>
@@ -135,22 +126,6 @@ const AdminTaskDetailsView = ({
           </table>
         </div>
       </div>
-      {/* {editMode && (
-      <CreateTaskPopup
-        setCreateNewTaskBtn={true}
-        setTaskTitle={currentTaskDetail.taskTitle}
-        setTaskDesc={currentTaskDetail.taskDesc}
-        employeesData={employeesData}
-        selectedEmployees={selectedEmployees}
-        setSelectedEmployees={setSelectedEmployees}
-        open={open}
-        setOpen={setOpen}
-        errors={errors}
-        setErrors={setErrors}
-        handleNewTaskCreationBtn={handleNewTaskCreationBtn}
-        handleUpdateTask={handleUpdateTask}
-      />
-    )} */}
     </div>
   );
 };

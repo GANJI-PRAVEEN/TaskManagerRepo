@@ -218,7 +218,7 @@ const getemployeeTasksStats = async(req,res) =>{
     }
 }
 
-const getAdminTasksStats = async (req, res) => {
+const getAdminTasksStatsHomePage = async (req, res) => {
   try {
     const { adminID } = req.body;
 
@@ -299,7 +299,7 @@ const getAdminTasksStats = async (req, res) => {
   }
 };
 
-const getAdminTasksInfo = async(req,res) => {
+const getAdminTasksStatsTaskTab = async(req,res) => {
     try {
         const {adminID} = req.body;
         if(!adminID){
@@ -393,5 +393,5 @@ export
     getemployeeTasks,
     loginAdminemployee,
     getemployeeTasksStats,
-    getAdminTasksStats,
-    getAdminTasksInfo};
+    getAdminTasksStatsHomePage,
+    getAdminTasksStatsTaskTab};

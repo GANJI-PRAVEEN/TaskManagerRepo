@@ -1,28 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { CreateNewTaskAPI } from "../../api/database";
 
 const CreateTaskPopup = ({
+  adminTasksInfo,
   editMode,
   setEditMode,
-  createNewTaskBtn,
-  setCreateNewTaskBtn,
+  setOpenMenu,
+  openMenuTaskId,
+  setOpenMenuTaskId,
   employeesData,
-  selectedEmployees,
-  setSelectedEmployees,
-  open,
-  setOpen,
-  errors,
-  setErrors,
-  handleNewTaskCreationBtn,
+  setCreateNewTaskBtn,
+  createNewTaskBtn,
 }) => {
-  const [taskTitle,setTaskTitle] = useState("");
-  const [taskDesc,setTaskDesc] = useState("");
-  const [selectedEmployees,setSelectedEmployees] = useState([]);
-  const [createNewTaskAPI,setCreateNewTaskAPI] = useState(false);
+  const session = JSON.parse(sessionStorage.getItem("loggedUser"));
+  const userRole = session?.role;
+  const user = session?.user;
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDesc, setTaskDesc] = useState("");
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [errors, setErrors] = useState({});
+  const [openDropDown, setOpenDropDown] = useState(false);
+  const taskDetail = adminTasksInfo.find( task => openMenuTaskId===task._id);
+  console.log(taskDetail)
+  useEffect(() => {
+    setOpenMenu(false);
+  },[])
+  useEffect(() => {
+    if(editMode && taskDetail){
+      setTaskTitle(taskDetail.taskTitle);
+      setTaskDesc(taskDetail.taskDesc);
+      const allEmployees = [
+        ...(taskDetail.completedEmployees || []),
+        ...(taskDetail.pendingEmployees || [])
+      ];
+      setSelectedEmployees(allEmployees);
+    }
+  },[editMode,taskDetail])
+  const handleCreateNewTask = async () => {
+    try {
+      let newErrors = {};
+      if (!taskTitle.trim()) newErrors.taskTitle = "Task title is required";
+      if (!taskDesc.trim()) newErrors.taskDesc = "TaskDesc is required";
+      if (selectedEmployees.length == 0)
+        newErrors.setEmployees = "Select at least one employee";
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      setErrors({});
+      const data = await CreateNewTaskAPI({
+        taskTitle: taskTitle,
+        taskDesc: taskDesc,
+        selectedEmployees: selectedEmployees,
+      });
+      if (data.success) {
+        setCreateNewTaskBtn(false);
+        toast.success("Created Task Successfully");
+      } else {
+        toast.error("Errorwhile adding task pls refresh to try again...");
+      }
+    } catch (error) {
+      console.log("server error");
+    }
+  };
 
   return (
     <div
-      className={`${createNewTaskBtn ? "flex" : "hidden"} fixed inset-0 items-center justify-center`}
+      className={`${(createNewTaskBtn || editMode )? "flex" : "hidden"} fixed inset-0 items-center justify-center`}
     >
       <div className="absolute inset-0 bg-black/50"></div>
 
@@ -30,12 +76,23 @@ const CreateTaskPopup = ({
         className={`absolute ml-3 p-2 sm:ml-0 top-20 w-[280px] h-[480px] sm:w-[500px] border bg-white`}
       >
         <div className="p-2 relative">
-          <p className={`text-lg sm:text-2xl font-bold text-center`}>
-            Create New Task
-          </p>
+          {!editMode && (
+            <p className={`text-lg sm:text-2xl font-bold text-center`}>
+              Create New Task
+            </p>
+          )}
+          {editMode && (
+            <p className={`text-lg sm:text-2xl font-bold text-center`}>
+              Update Task
+            </p>
+          )}
+          
           <span
             className="absolute right-1 hover:cursor-pointer top-1 material-symbols-outlined"
-            onClick={() => setCreateNewTaskAPI(false)}
+            onClick={() => {
+               setCreateNewTaskBtn(false);
+               setEditMode(false);
+            }}
           >
             close
           </span>
@@ -83,7 +140,7 @@ const CreateTaskPopup = ({
             <p className="text-sm sm:text-lg">Assign To</p>
 
             <div
-              onClick={() => setOpen(!open)}
+              onClick={() => setOpenDropDown(!openDropDown)}
               className="w-full p-1 border bg-gray-400/30 py-2 flex justify-between items-center hover:cursor-pointer"
             >
               <span className={``}>
@@ -101,7 +158,7 @@ const CreateTaskPopup = ({
               <p className="text-red-600 text-sm">{errors.setEmployees}</p>
             )}
 
-            {open && (
+            {openDropDown && (
               <div className="absolute top-20 w-full border flex flex-col p-2 rounded-md mt-2 bg-white">
                 {employeesData.map((emp) => (
                   <label key={emp._id}>
@@ -112,7 +169,7 @@ const CreateTaskPopup = ({
                         setSelectedEmployees((prev) =>
                           prev.includes(emp._id)
                             ? prev.filter((id) => id !== emp._id)
-                            : [...prev, emp._id]
+                            : [...prev, emp._id],
                         );
                         setErrors((prev) => ({ ...prev, setEmployees: "" }));
                       }}

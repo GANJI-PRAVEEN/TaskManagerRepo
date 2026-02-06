@@ -1,9 +1,10 @@
 import React from "react";
+import assets from "../../assets/assets.js";
 
-const AdminEmployeesTab = ({ activeSidebarTab, employeesData, assets }) => {
+const AdminEmployeesTab = ({employeesData }) => {
   return (
     <div
-      className={`${activeSidebarTab === "adminemployees" ? "grid" : "hidden"}
+      className={`grid
         max-w-[1000px]
         mx-auto
         gap-10

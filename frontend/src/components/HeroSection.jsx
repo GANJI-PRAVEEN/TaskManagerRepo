@@ -7,7 +7,7 @@ import HomePage from "./MainSection/HomePage.jsx";
 import ProfilePage from "./MainSection/ProfilePage.jsx";
 import AdminEmployeesTab from "./MainSection/AdminEmployeesTab.jsx";
 import AdminTasksTab from "./MainSection/AdminTasksTab.jsx";
-import CreateNewTaskAPI, { loadEmployeesData } from "../api/database.js";
+import {loadAdminTasksStatsForTasksTabAPI, loadAdminTasksStatsTableForHomePageAPI, loadEmployeesDataAPI } from "../api/database.js";
 
 const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   const session = JSON.parse(sessionStorage.getItem("loggedUser"));
@@ -30,12 +30,7 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   const [openMenuTaskId, setOpenMenuTaskId] = useState(null);
   const [editMode,setEditMode] = useState(false);
 
-  function getPerformanceLabel(score) {
-    if (score >= 85) return "Excellent";
-    if (score >= 70) return "Good";
-    if (score >= 50) return "Average";
-    return "Needs Improvement";
-  }
+
 
   let employeeCompletion = 10;
   let employeePending = 6;
@@ -104,44 +99,10 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
     ];
   }
 
-  const handleNewTaskCreationBtn = async () => {
-    let newErrors = {};
-    if (!taskTitle.trim()) newErrors.taskTitle = "Task title is required";
-    if (!taskDesc.trim()) newErrors.taskDesc = "TaskDesc is required";
-    if (selectedEmployees.length == 0)
-      newErrors.setEmployees = "Select at least one employee";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-
-    const data = await CreateNewTaskAPI(taskTitle,taskDesc,user?._id,selectedEmployees)
-    if (data.success) {
-      setCreateNewTaskBtn(false);
-      toast.success("Created Task Successfully");
-      loadAdminTasksInfo();
-    } else {
-      toast.error("Errorwhile adding task pls refresh to try again...");
-    }
-  };
-
-  const loadAdminTasksInfo = async () => {
+  const loadAdminStatsTasksTab = async () => {
     try {
       if (!user?._id) return;
-
-      const res = await fetch(
-        "http://localhost:4000/api/v1/taskManager/getAdminTasksInfo",
-        {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({ adminID: user?._id }),
-        },
-      );
-
-      const data = await res.json();
+      const data = await loadAdminTasksStatsForTasksTabAPI();
       if (data.success) {
         setAdminTasksInfo(data.adminTasksInfo);
         toast.success("retrived admin Tasks details");
@@ -153,7 +114,7 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
 
   const loademployeesDataWithTasksStats = async () => {
     try {
-      const data = await loadEmployeesData(user?._id);
+      const data = await loadEmployeesDataAPI();
       if (data.success) {
         toast.success("fetched employee stats successfully");
         setemployeesData(data.employees);
@@ -169,18 +130,9 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
 
   }
 
-  const loadAdminTasksStats = async () => {
+  const loadAdminStatsHomePage = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:4000/api/v1/taskManager/getAdminTasksStats",
-        {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({ adminID: user._id }),
-        },
-      );
-
-      const data = await res.json();
+      const data = await loadAdminTasksStatsTableForHomePageAPI();
       if (data.success) {
         setAdminTasksStats(data.tasksInfo);
         toast.success("fetched admin tasks stats data");
@@ -196,8 +148,8 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   useEffect(() => {
     if (user?._id) {
       loademployeesDataWithTasksStats();
-      loadAdminTasksStats();
-      loadAdminTasksInfo();
+      loadAdminStatsTasksTab();
+      loadAdminStatsHomePage();
     } else {
       toast.error("please login first..!");
     }
@@ -217,50 +169,41 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
         setActiveSidebarTab={setActiveSidebarTab}
         assets={assets}
       />
-
-      <HomePage
-        activeSidebarTab={activeSidebarTab}
-        statusBoxes={statusBoxes}
-        adminTasksStats={adminTasksStats}
-      />
-
-      <ProfilePage
-        activeSidebarTab={activeSidebarTab}
-        profile={profile}
-        userRole={userRole}
-        employeePerformanceScore={employeePerformanceScore}
-        adminPerformanceScore={adminPerformanceScore}
-        getPerformanceLabel={getPerformanceLabel}
-        assets={assets}
-      />
-
-      <AdminEmployeesTab
-        activeSidebarTab={activeSidebarTab}
-        employeesData={employeesData}
-        assets={assets}
-      />
-
-      <AdminTasksTab
-        activeSidebarTab={activeSidebarTab}
-        setCreateNewTaskBtn={setCreateNewTaskBtn}
-        createNewTaskBtn={createNewTaskBtn}
-        taskTitle={taskTitle}
-        setTaskTitle={setTaskTitle}
-        taskDesc={taskDesc}
-        setTaskDesc={setTaskDesc}
-        employeesData={employeesData}
-        selectedEmployees={selectedEmployees}
-        setSelectedEmployees={setSelectedEmployees}
-        open={open}
-        setOpen={setOpen}
-        errors={errors}
-        setErrors={setErrors}
-        handleNewTaskCreationBtn={handleNewTaskCreationBtn}
-        adminTasksInfo={adminTasksInfo}
-        openMenuTaskId={openMenuTaskId}
-        setOpenMenuTaskId={setOpenMenuTaskId}
-        handleUpdateTask={handleUpdateTask}
-      />
+      {activeSidebarTab==="" &&
+        <HomePage
+          statusBoxes={statusBoxes}
+          adminTasksStats={adminTasksStats}
+        />
+      }
+      { (activeSidebarTab === "employeeProfile" || activeSidebarTab === "adminProfile") &&
+        <ProfilePage
+          employeesData = {employeesData}
+        />
+      }
+      {activeSidebarTab=="adminemployees" && 
+        <AdminEmployeesTab
+          employeesData={employeesData}
+        />
+      }
+      {activeSidebarTab === "adminTasks" && 
+        <AdminTasksTab
+          taskTitle={taskTitle}
+          setTaskTitle={setTaskTitle}
+          taskDesc={taskDesc}
+          setTaskDesc={setTaskDesc}
+          employeesData={employeesData}
+          selectedEmployees={selectedEmployees}
+          setSelectedEmployees={setSelectedEmployees}
+          open={open}
+          setOpen={setOpen}
+          errors={errors}
+          setErrors={setErrors}
+          adminTasksInfo={adminTasksInfo}
+          openMenuTaskId={openMenuTaskId}
+          setOpenMenuTaskId={setOpenMenuTaskId}
+          handleUpdateTask={handleUpdateTask}
+        />
+      }
     </div>
   );
 };

@@ -1,13 +1,15 @@
 import React from "react";
-
+import assets from "../../assets/assets.js";
 const Sidebar = ({
   openSideBar,
   setSideBar,
   sideBarOptions,
-  employeeName,
   setActiveSidebarTab,
-  assets,
+
 }) => {
+  const session = JSON.parse(sessionStorage.getItem("loggedUser"));
+  const user = session.user;
+  const userRole = session.userRole;
   return (
     <div className="relative">
       <div
@@ -37,7 +39,7 @@ const Sidebar = ({
                 alt="profile"
                 className="w-[80px] h-[80px] rounded-full"
               />
-              <p className="text-lg name-font">Welcome, {employeeName}</p>
+              <p className="text-lg name-font">Welcome, {user?.employeeName || user?.adminName}</p>
             </div>
 
             <div className="w-full border border-white/40" />
