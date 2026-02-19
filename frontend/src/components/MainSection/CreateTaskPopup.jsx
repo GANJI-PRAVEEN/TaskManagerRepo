@@ -215,9 +215,9 @@ const CreateTaskPopup = ({
             )}
 
             {openDropDown && (
-              <div className="absolute top-20 w-full border flex flex-col p-2 rounded-md mt-2 bg-white">
+              <div className="max-h-25 mt-1 overflow-y-auto absolute top-20 w-full border flex flex-col p-2 rounded-md mt-2 bg-white">
                 {employeesData.map((emp) => (
-                  <label key={emp._id}>
+                  <label key={emp._id} className='flex items-center gap-1  p-1'>
                     <input
                       type="checkbox"
                       checked={selectedEmployees.includes(emp._id)} //tick all already selected employees

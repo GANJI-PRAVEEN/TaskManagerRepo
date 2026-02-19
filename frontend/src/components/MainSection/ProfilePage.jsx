@@ -56,7 +56,7 @@ const ProfilePage = ({
   return (
     <div className="flex items-center justify-center ">
       <div
-        className={`p-5 h-[400px] sm:h-[450px] w-[400px] sm:w-[450px] lg:[600px] bg-[#f49cbb]/30  overflow-hidden rounded-lg shadow shadow-md flex flex-col items-center `}
+        className={`p-5 h-[400px] sm:h-[450px] w-[400px] sm:w-[450px] lg:[600px] profile-bg  overflow-hidden rounded-lg shadow shadow-md flex flex-col items-center `}
       >
         <div className="h-[150px] sm:h-[200px] m-6 sm:m-8 w-[150px] sm:w-[200px] text-center ">
           <img
@@ -67,7 +67,7 @@ const ProfilePage = ({
           <hr />
         </div>
 
-        <div className='bg-amber-100 p-5 rounded-md'>
+        <div className='bg-amber-100/80 p-5 rounded-md'>
           {profile.map((detail) => (
             <div key={detail.label} className="flex flex-col">
               <p className="text-md sm:text-xl">

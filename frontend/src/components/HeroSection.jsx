@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import assets from "../assets/assets.js";
+import {useNavigate} from 'react-router-dom'
 import { toast } from "react-toastify";
 
 import Sidebar from "./MainSection/Sidebar.jsx";
@@ -15,6 +16,8 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
   const session = JSON.parse(sessionStorage.getItem("loggedUser"));
   const userRole = session?.role;
   const user = session?.user;
+
+  const navigate = useNavigate();
 
   const [employeeName] = useState(user.employeeName || user.adminName);
   const [openSideBar, setSideBar] = useState(false);
@@ -227,6 +230,9 @@ const HeroSection = ({ activeSidebarTab, setActiveSidebarTab }) => {
       <EmployeePendingTasksTab/>
       }
 
+      {(activeSidebarTab==="adminLogout" || activeSidebarTab==="employeeLogoutTab") &&(
+          navigate('/login')
+      )}
     </div>
   );
 };

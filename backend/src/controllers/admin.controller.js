@@ -672,8 +672,6 @@ export const updateBulkStatus = async(req,res) => {
         
       }))
     )
-    console.log("Matched:", findTask.matchedCount);
-console.log("Modified:", findTask.modifiedCount);
     return res.status(200).json({
       success:true,
       message:"updated all the statuses"
