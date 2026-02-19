@@ -11,8 +11,9 @@ const Login = () => {
   const [who,setWho] = useState("guest");
   const navigate = useNavigate();
   const handleLoginSubmit=async(e)=>{
-     console.log("API URL:", import.meta.env.VITE_API_URL);
+     
     try {
+      console.log("API URL:", import.meta.env.VITE_API_URL);
        console.log(email,password);
     e.preventDefault();
     //sending data to server
