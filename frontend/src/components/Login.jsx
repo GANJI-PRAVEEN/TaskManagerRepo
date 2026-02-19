@@ -4,14 +4,14 @@ import {toast} from "react-toastify";
 import ParticlesBackground from './ParticlesBackground';
 
 const Login = () => {
-  console.log("API URL:", import.meta.env.VITE_API_URL);
-
+ 
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const [loggedUser,setLoggedUser]=useState("");
   const [who,setWho] = useState("guest");
   const navigate = useNavigate();
   const handleLoginSubmit=async(e)=>{
+     console.log("API URL:", import.meta.env.VITE_API_URL);
     try {
        console.log(email,password);
     e.preventDefault();
