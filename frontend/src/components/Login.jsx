@@ -17,7 +17,7 @@ const Login = () => {
        console.log(email,password);
     e.preventDefault();
     //sending data to server
-    const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/user-login`,{
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/taskManager/user-login`,{
       method:"POST",
       headers:{
         "Content-type":"application/json"
