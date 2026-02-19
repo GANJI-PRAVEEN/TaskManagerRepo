@@ -4,6 +4,8 @@ import {toast} from "react-toastify";
 import ParticlesBackground from './ParticlesBackground';
 
 const Login = () => {
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const [loggedUser,setLoggedUser]=useState("");
