@@ -9,7 +9,7 @@ export const createEmployeeAPI = async({
   empEmail,
   empPassword
 }) => {
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/create-employee",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/create-employee`,{
     method:"POST",
     headers:{
       "Content-type":"application/json"
@@ -27,7 +27,7 @@ export const createEmployeeAPI = async({
 
 
 export const deleteEmployeeAPI = async({empID}) => {
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/deleteEmployee",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/deleteEmployee`,{
     method:"POST",
     headers:{
       "Content-type":"application/json"
@@ -38,7 +38,7 @@ export const deleteEmployeeAPI = async({empID}) => {
 }
 
 export const fetchEmployeesAPI = async() => {
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/findemployeeUnderAdmin",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/findemployeeUnderAdmin`,{
     method:"POST",
     headers:{
       "Content-type":"application/json"
@@ -52,7 +52,7 @@ export const fetchEmployeesAPI = async() => {
 export const getEmployeeByIDAPI = async({
   empID
 }) => {
-  const res =  await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/getEmployeeByID",{
+  const res =  await fetch(`${import.meta.env.VITE_API_URL}/api/v1/taskManager/getEmployeeByID`,{
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify({
@@ -67,7 +67,7 @@ export const CreateNewTaskAPI = async ({
   selectedEmployees,
 }) => {
     const res = await fetch(
-      "https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/create-taskByAdmin",
+      `${import.meta.env.VITE_API_URL}api/v1/taskManager/create-taskByAdmin`,
       {
         method: "POST",
         headers: { "Content-type": "application/json" },
@@ -84,7 +84,7 @@ export const CreateNewTaskAPI = async ({
 
 export const loadEmployeesDataAPI = async () => {
     const res = await fetch(
-      "https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/getemployeeTasksStats",
+      `${import.meta.env.VITE_API_URL}api/v1/taskManager/getemployeeTasksStats`,
       {
         method: "POST",
         headers: { "Content-type": "application/json" },
@@ -98,7 +98,7 @@ export const loadEmployeesDataAPI = async () => {
 export const loadAdminTasksStatsForTasksTabAPI = async () => {
   console.log("🚀 loadAdminTasksStatsForTasksTabAPI CALLED");
   const res = await fetch(
-        "https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/getAdminTasksStatsTaskTab",
+        `${import.meta.env.VITE_API_URL}api/v1/taskManager/getAdminTasksStatsTaskTab`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -110,7 +110,7 @@ export const loadAdminTasksStatsForTasksTabAPI = async () => {
 
 export const loadAdminTasksStatsTableForHomePageAPI = async () => {
   const res = await fetch(
-        "https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/getAdminTasksStatsHomePage",
+        `${import.meta.env.VITE_API_URL}api/v1/taskManager/getAdminTasksStatsHomePage`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -123,7 +123,7 @@ export const updateTaskAPI = async({
   openMenuTaskId,taskTitle,taskDesc,employeeWithStatus
 }) => {
   console.log("Called ",openMenuTaskId,taskTitle)
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/updateTask",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/updateTask`,{
     method:"POST",
     headers:{"Content-type":"application/json"},
     body:JSON.stringify({openMenuTaskId,taskTitle,taskDesc,employeeWithStatus})
@@ -134,7 +134,7 @@ export const updateTaskAPI = async({
 export const deleteTaskAPI = async({
   taskID
 }) => {
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/deleteTask",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/deleteTask`,{
     method:"POST",
     headers:{"Content-type":"application/json"},
     body:JSON.stringify({taskID})
@@ -147,7 +147,7 @@ export const loadSpecificEmployeeTasksAPI = async({
   empID
 }) => {
   try{
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/getEmployeePersonalTasksList",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/getEmployeePersonalTasksList`,{
     method:"POST",
     headers:{"Content-type":"application/json"},
     body:JSON.stringify({empID})
@@ -166,7 +166,7 @@ export const updateBulkStatusAPI = async({
 }) => {
 
   console.log("data got - ",updates)
-  const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/updateBulkStatus",{
+  const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/updateBulkStatus`,{
     method:"POST",
     headers:{"Content-type":"application/json"},
     body:JSON.stringify({empID,updates})

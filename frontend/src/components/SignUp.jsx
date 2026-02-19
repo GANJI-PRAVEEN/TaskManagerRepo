@@ -20,7 +20,7 @@ const SignUp = () => {
   const handleRegisterButton=async(e)=>{
       e.preventDefault();
       //sending admin data to server
-      const res = await fetch("https://task-manager-app-backend-jl4h.onrender.com/api/v1/taskManager/create-admin",{
+      const res = await fetch(`${import.meta.env.VITE_API_URL}api/v1/taskManager/create-admin`,{
         method:"POST",
         headers:{
           "Content-type":"application/json",
