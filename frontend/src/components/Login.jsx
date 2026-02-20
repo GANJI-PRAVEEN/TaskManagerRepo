@@ -13,8 +13,9 @@ const Login = () => {
   const handleLoginSubmit=async(e)=>{
      
     try {
-      console.log("API URL:", import.meta.env.VITE_API_URL);
+      
        console.log(email,password);
+       console.log("API URL:", import.meta.env.VITE_API_URL);
     e.preventDefault();
     //sending data to server
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/taskManager/user-login`,{
