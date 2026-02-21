@@ -46,7 +46,7 @@ const EmployeePendingTasksTab = () => {
 
 
   return (
-    <div className="relative grid grid-cols-1 gap-10 z-50
+    <div className="relative grid grid-cols-1 gap-10
       place-items-center
       sm:place-items-stretch
       sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]
@@ -100,6 +100,7 @@ const EmployeePendingTasksTab = () => {
         </div>
         }
         </div>
+
   );
 }
 

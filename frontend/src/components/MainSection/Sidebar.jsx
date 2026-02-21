@@ -21,9 +21,9 @@ const Sidebar = ({
       <div
         className={`
           fixed left-0 top-14 h-full
-          bg-[#003566]/90 z-40
+          bg-[#003566]/90 
           transition-all duration-300 ease-in-out
-          ${openSideBar ? "sm:w-[250px] rounded-tr-md w-[200px]" : "w-[50px]"}
+          ${openSideBar ? "sm:w-[250px] rounded-tr-md w-[200px] z-[90]" : "w-[50px]"}
         `}
         onMouseEnter={() => {
         if (isHoverSupported) setSideBar(true);
@@ -45,7 +45,7 @@ const Sidebar = ({
         )}
 
         {openSideBar && (
-          <div className="flex flex-col items-center text-white">
+          <div className="flex flex-col items-center text-white z-[100]">
             <div className="flex items-center gap-3 m-3">
               <img
                 src={assets.profile}
