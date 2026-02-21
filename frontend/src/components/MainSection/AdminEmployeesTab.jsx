@@ -50,13 +50,13 @@ const AdminEmployeesTab = ({ employeesData,setemployeesData,setRefreshData }) =>
                 alt=""
                 className="sm:w-[100px] sm:h-[100px] w-[70px] h-[70px] rounded-full"
               />
-              <div className="flex flex-col items-center overflow-hidden hover:cursor-pointer" onClick={() => {
+              <div className="flex flex-col items-center overflow-hidden hover:cursor-pointer w-full p-1" onClick={() => {
                 setCurrentEmpID(employee._id); 
                 setEmpFullTasksViewTrigger(true);
 
               }}>
-                <p className="text-[13px] sm:text-lg">{employee.employeeName}</p>
-                <p className="text-[13px] sm:text-lg">{employee.employeeMail}</p>
+                <p className="text-[13px] sm:text-lg break-words text-center">{employee.employeeName}</p>
+                <p className="text-[12px] sm:text-sm break-all text-center">{employee.employeeMail}</p>
               </div>
               <img src={assets.deleteIcon} alt="" className='absolute right-4 top-3 w-[20px] h-[20px] opacity-0 group-hover:opacity-100 hover:cursor-pointer' onClick={() => handleDeleteEmployee(employee._id)}/>
             </div>

@@ -42,7 +42,7 @@ const ProfilePage = ({
     profile = [
       { label: "Name", value: user?.employeeName },
       { label: "Email", value: user?.employeeMail },
-      { label: "Total Tasks Completed", value: employeeCompletion },
+      // { label: "Total Tasks Completed", value: employeeCompletion },
 
     ];
   }
@@ -50,7 +50,7 @@ const ProfilePage = ({
     profile = [
       { label: "Name", value: user?.adminName },
       { label: "Email", value: user?.adminMail },
-      { label: "Total Tasks Created", value: adminAssigned },
+      // { label: "Total Tasks Created", value: adminAssigned },
     ];
   }
   return (
