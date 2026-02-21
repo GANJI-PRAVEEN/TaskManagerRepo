@@ -28,7 +28,7 @@ const EmployeeAssignedTasksTab = () => {
 
   }
   return (
-    <div className="relative grid grid-cols-1 gap-10
+    <div className="relative grid grid-cols-1 gap-10 z-50
       place-items-center
       sm:place-items-stretch
       sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]
