@@ -56,7 +56,7 @@ const Login = () => {
   }
  return (
     <div className="w-full min-h-screen bg-black bg-cover">
-      <ParticlesBackground/>
+      <ParticlesBackground />
       <div className='p-10 flex w-full items-center justify-center'>
         <div className='w-[300px] h-[370px] bg-white rounded-md flex flex-col items-center space-y-6 sm:w-[350px]'>
           <div className='flex items-center flex-col space-y-2 py-2  '>

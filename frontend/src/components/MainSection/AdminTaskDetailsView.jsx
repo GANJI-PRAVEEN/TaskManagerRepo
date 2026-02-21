@@ -58,7 +58,7 @@ const AdminTaskDetailsView = ({
 
   return (
     
-    <div className="w-full">
+    <div className="w-full ">
       {adminTasksInfo?.length===0 && (
           <p className='text-lg sm:text-xl font-bold text-center text-red-700'>Create Task and Upgrade Your Employees</p>
       )}
@@ -126,7 +126,7 @@ const AdminTaskDetailsView = ({
                       )}
                     </td>
 
-                    <td className="text-center hover:cursor-pointer relative">
+                    <td className='text-center hover:cursor-pointer'>
                       <span
                         onClick={() =>{
                           setOpenMenu(true);
@@ -142,7 +142,7 @@ const AdminTaskDetailsView = ({
                       </span>
 
                       <div
-                        className={`absolute right-12 top-0 mt-2 ${
+                        className={`right-12 top-0 mt-2 ${
                           openMenuTaskId === taskDetail._id
                             ? "block"
                             : "hidden"
