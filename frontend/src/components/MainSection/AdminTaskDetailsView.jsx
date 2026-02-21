@@ -142,7 +142,7 @@ const AdminTaskDetailsView = ({
                       </span>
 
                       <div
-                        className={`right-12 top-0 m-1 ${
+                        className={`right-12 top-0 mt-2  ${
                           openMenuTaskId === taskDetail._id
                             ? "block"
                             : "hidden"

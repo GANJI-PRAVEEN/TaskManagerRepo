@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import assets from "../../assets/assets.js";
 const Sidebar = ({
   openSideBar,
@@ -10,6 +10,12 @@ const Sidebar = ({
   const session = JSON.parse(sessionStorage.getItem("loggedUser"));
   const user = session.user;
   const userRole = session.userRole;
+   const [isHoverSupported, setIsHoverSupported] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(hover: hover)");
+    setIsHoverSupported(mediaQuery.matches);
+  }, []);
   return (
     <div className="relative">
       <div
@@ -19,8 +25,15 @@ const Sidebar = ({
           transition-all duration-300 ease-in-out
           ${openSideBar ? "sm:w-[250px] rounded-tr-md w-[200px]" : "w-[50px]"}
         `}
-        onMouseEnter={() => setSideBar(true)}
-        onMouseLeave={() => setSideBar(false)}
+        onMouseEnter={() => {
+        if (isHoverSupported) setSideBar(true);
+      }}
+      onMouseLeave={() => {
+        if (isHoverSupported) setSideBar(false);
+      }}
+      onClick={() => {
+        if (!isHoverSupported) setSideBar(!openSideBar);
+      }}
       >
         {!openSideBar && (
           <div className="flex flex-col items-center space-y-10 p-3 text-white sm:text-md text-sm">
