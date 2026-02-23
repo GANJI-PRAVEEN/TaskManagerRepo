@@ -9,6 +9,7 @@ const SignUp = () => {
   const [password,setPassword]=useState("");
   const [username,setUsername] = useState("");
   const [name,setName]=useState();
+  const [loading,setLoading] = useState(false);
 
 
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const SignUp = () => {
 
 
   const handleRegisterButton=async(e)=>{
+    setLoading(true);
       e.preventDefault();
       //sending admin data to server
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/taskManager/create-admin`,{
@@ -35,6 +37,7 @@ const SignUp = () => {
       
       const msg = await res.json();
       if(msg.success){
+        setLoading(false);
         sessionStorage.setItem(
           "loggedUser",
           JSON.stringify({
@@ -46,6 +49,7 @@ const SignUp = () => {
         navigate('/');
       }
       else {
+        setLoading(false);
         toast.error(msg.message);
       }
       
@@ -98,7 +102,7 @@ const SignUp = () => {
           </select>         
         </div>
          <div className='flex flex-col items-center space-y-3'>
-          <button className='border p-2 mt-10 rounded-lg w-[150px] bg-green-600 hover:bg-green-500 text-white font-bold sm:w-[200px] sm:text-lg cursor-pointer' onClick={(e)=>handleRegisterButton(e)}>Register</button>
+          <button className='border p-2 mt-10 rounded-lg w-[150px] bg-green-600 hover:bg-green-500 text-white font-bold sm:w-[200px] sm:text-lg cursor-pointer' onClick={(e)=>handleRegisterButton(e)}>{loading? 'please wait..':'Register'}</button>
           <p className='text-sm sm:text-lg '>Already Registered? click here to <span className='text-blue-800 underline font-bold cursor-pointer' onClick={handleAlreadyRegistered}>Login</span></p>
          </div>
 

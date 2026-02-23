@@ -26,6 +26,7 @@ const CreateTaskPopup = ({
   const [openDropDown, setOpenDropDown] = useState(false);
   const [employeeWithStatus, setEmployeeWithStatus] = useState([]);
   const [tasksData,setTasksData] = useState(null);
+  const [loading,setLoading] = useState(false);
   
   const loadAdminTasksInfoTasksTab = async () => {
     try {
@@ -69,6 +70,7 @@ const CreateTaskPopup = ({
 
   const handleUpdateTask = async () => {
     try {
+      setLoading(true);
      // update(openMenuTaskId,taskTitle,taskDesc,employeeWithStatus);
      const res = await updateTaskAPI(
       {openMenuTaskId,taskTitle,taskDesc,employeeWithStatus});
@@ -80,17 +82,22 @@ const CreateTaskPopup = ({
       setEditMode(false);
      }
      else {
+      setLoading(false);
       toast.error(res.message);
       console.log("failed to update",res)
      }
     } catch (error) {
       console.log("Failed to update",error.message);
     }
+    finally{
+      setLoading(false);
+    }
   };
 
 
   const handleCreateNewTask = async () => {
     try {
+      setLoading(true);
       let newErrors = {};
       if (!taskTitle.trim()) newErrors.taskTitle = "Task title is required";
       if (!taskDesc.trim()) newErrors.taskDesc = "TaskDesc is required";
@@ -98,6 +105,7 @@ const CreateTaskPopup = ({
         newErrors.setEmployees = "Select at least one employee";
 
       if (Object.keys(newErrors).length > 0) {
+        setLoading(false);
         setErrors(newErrors);
         return;
       }
@@ -115,10 +123,14 @@ const CreateTaskPopup = ({
         setCreateNewTaskBtn(false);
         toast.success("Created Task Successfully");
       } else {
+        setLoading(false);
         toast.error("Errorwhile adding task pls refresh to try again...");
       }
     } catch (error) {
       console.log("server error");
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -254,7 +266,7 @@ const CreateTaskPopup = ({
                 className={`border bg-green-700 px-6 py-1 rounded-md text-white hover:cursor-pointer hover:bg-green-600`}
                 onClick={editMode ? handleUpdateTask : handleCreateNewTask}
               >
-                {editMode ? "Update" : "Submit"}
+                {editMode ? (loading? 'please wait..' : 'Update') : (loading? 'please wait..':'Submit')}
               </button>
             </div>
           </div>

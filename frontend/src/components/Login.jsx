@@ -9,10 +9,12 @@ const Login = () => {
   const [password,setPassword] = useState("");
   const [loggedUser,setLoggedUser]=useState("");
   const [who,setWho] = useState("guest");
+  const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
   const handleLoginSubmit=async(e)=>{
      
     try {
+      setLoading(true);
       
        console.log(email,password);
        console.log("API URL:", import.meta.env.VITE_API_URL);
@@ -31,6 +33,7 @@ const Login = () => {
     const data = await res.json();
     if(!data.success){
       console.log(data);
+      setLoading(false);
       toast.error("user not exist");
       return;
     }
@@ -45,8 +48,12 @@ const Login = () => {
     navigate('/');
       
     } catch (error) {
+      setLoading(false);
       console.log("error at ",error)
       
+    }
+    finally{
+      setLoading(false);
     }
    
   }
@@ -69,7 +76,7 @@ const Login = () => {
           <input type="password" value={password} placeholder='password' className='border border-gray-300 shadow-sm rounded-4xl p-1.5 text-center mx-5 shadow-black focus:outline-none hover:shadow-green-400' onChange={(e)=>{setPassword(e.target.value)}}/>
          </div>
          <div className='flex flex-col items-center space-y-3'>
-          <button className='border p-2 mt-10 rounded-lg w-[150px] bg-blue-800 hover:bg-blue-700 text-white font-bold sm:w-[200px] sm:text-lg cursor-pointer' onClick={(e)=>{handleLoginSubmit(e)}}>Login</button>
+          <button className={`border p-2 mt-10 rounded-lg w-[150px] bg-blue-800 hover:bg-blue-700 text-white font-bold sm:w-[200px] sm:text-lg cursor-pointer ${loading? 'bg-blue-600':''}`} onClick={(e)=>{handleLoginSubmit(e)}}>{loading? 'Please Wait....':'Login'}</button>
           <p className='text-sm sm:text-lg '>Not registered yet..? <span className='text-blue-800 underline font-bold cursor-pointer' onClick={(e)=>{handleNewRegister(e)}}>Register</span></p>
          </div>
 
